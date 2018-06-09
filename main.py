@@ -1,6 +1,7 @@
 import web
 import json
 from util import Board
+import time
 
 urls = (
     "/test", "Test",
@@ -22,11 +23,14 @@ class JsonApiDemo:
     def GET(self):
         result_dic = {'key_1': ['.', '.', 'O'], 'key_2': 2}
         web.header('Content-Type', 'application/json')
+        web.header('Access-Control-Allow-Origin', '*')
+        web.header('Access-Control-Allow-Credentials', 'true')
         return json.dumps(result_dic)
 
 
 class GetRandomIteration:
     def POST(self):
+        start_time = time.time()
         post_data = web.input()
         row_num, col_num = map(int, [post_data.row_num, post_data.col_num])
         try:
@@ -37,6 +41,9 @@ class GetRandomIteration:
         board.iter_n(iter_n)
         result = {'data': board.history}
         web.header('Content-Type', 'application/json')
+        web.header('Access-Control-Allow-Origin', '*')
+        web.header('Access-Control-Allow-Credentials', 'true')
+        print(time.time() - start_time)
         return json.dumps(result)
 
 
