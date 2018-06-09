@@ -1,5 +1,6 @@
 # 封装工具类
 import random
+import copy
 
 
 class Common:
@@ -14,7 +15,8 @@ class Board:
         self.row_num = row
         self.col_num = col
 
-        self.status = [[random.random() > 0.5 for i in range(col)] for j in range(row)]
+        self.status = [[int(random.random() > 0.5) for i in range(col)] for j in range(row)]
+        self.history = []
 
     def refactor(self):
         for i in range(self.row_num):
@@ -38,4 +40,26 @@ class Board:
             return self.status[1 + row][1 + col]
         else:
             return 0
+
+    def rollback(self):
+        self.status.pop(0)
+        self.status.pop()
+        for i in range(self.row_num):
+            self.status[i].pop(0)
+            self.status[i].pop()
+
+    def get_next_time_status(self):
+        next_time_status = copy.deepcopy(self.status)
+        self.refactor()
+        for row in range(0, self.row_num):
+            for col in range(0, self.col_num):
+                next_time_status[row][col] = self.get_single_cell_status(row, col)
+        self.rollback()
+        self.history.append(self.status.copy())
+        self.status = next_time_status
+
+    def iter_n(self, n=50):
+        for i in range(n):
+            self.get_next_time_status()
+
 

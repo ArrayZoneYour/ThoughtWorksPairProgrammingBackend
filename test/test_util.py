@@ -6,11 +6,15 @@ class TestUtil(unittest.TestCase):
 
     def test_board_initialize_3_3(self):
         board = Board(3, 3)
+        self.assertIsNot(board.status[0][0], True)
+        self.assertIsNot(board.status[0][0], False)
         self.assertEqual(len(board.status), 3)
         self.assertEqual(len(board.status[0]), 3)
 
     def test_board_initialize_5_5(self):
         board = Board(5, 5)
+        self.assertIsNot(board.status[0][0], True)
+        self.assertIsNot(board.status[0][0], False)
         self.assertEqual(len(board.status), 5)
         self.assertEqual(len(board.status[0]), 5)
 
@@ -46,7 +50,6 @@ class TestUtil(unittest.TestCase):
         ]
 
         self.assertEqual(origin_board.get_single_cell_status(0, 0), 1)
-        self.assertEqual(origin_board.get_single_cell_status(2, 2), 0)
         self.assertEqual(origin_board.get_single_cell_status(0, 1), 0)
         self.assertEqual(origin_board.get_single_cell_status(0, 2), 1)
         self.assertEqual(origin_board.get_single_cell_status(1, 0), 1)
@@ -54,9 +57,56 @@ class TestUtil(unittest.TestCase):
         self.assertEqual(origin_board.get_single_cell_status(1, 2), 1)
         self.assertEqual(origin_board.get_single_cell_status(2, 0), 0)
         self.assertEqual(origin_board.get_single_cell_status(2, 1), 1)
+        self.assertEqual(origin_board.get_single_cell_status(2, 2), 0)
 
-    def test_get(self):
-        pass
+    def test_rollback_to_origin_board(self):
+        origin_board = Board(3, 3)
+        origin_status = origin_board.status.copy()
+        origin_board.refactor()
+        origin_board.rollback()
+        self.assertEqual(origin_board.status, origin_status)
+
+    def test_get_next_time_status(self):
+        board = Board(3, 3)
+        board.status = [
+            [0, 1, 1],
+            [1, 1, 1],
+            [0, 0, 0]
+        ]
+        board_copy = board.status.copy()
+        board.get_next_time_status()
+        self.assertEqual(board.history, [board_copy])
+        self.assertEqual(board.status, [
+            [1, 0, 1],
+            [1, 0, 1],
+            [0, 1, 0]
+        ])
+
+    def test_iter_n(self):
+        board = Board(3, 3)
+        board.status = [
+            [0, 1, 1],
+            [1, 1, 1],
+            [0, 0, 0]
+        ]
+        board.iter_n(3)
+        self.assertEqual(board.history, [
+            [
+                [0, 1, 1],
+                [1, 1, 1],
+                [0, 0, 0]
+            ],
+            [
+                [1, 0, 1],
+                [1, 0, 1],
+                [0, 1, 0]
+            ],
+            [
+                [0, 0, 0],
+                [1, 0, 1],
+                [0, 1, 0]
+            ]
+        ])
 
 
 
