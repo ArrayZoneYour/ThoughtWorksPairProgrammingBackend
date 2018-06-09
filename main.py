@@ -11,6 +11,7 @@ app = web.application(urls, globals())
 # Test whether the web server is running.
 class Test:
     def GET(self):
+        web.header('Content-Type', 'text')
         return 'The server is running now !'
 
 
