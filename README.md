@@ -1,9 +1,10 @@
 ## ThoughtWorksPairProgrammingBackend
 
 本项目产生于ThoughtWorks 结对编程活动
+
 [生命游戏规则简介](https://zh.wikipedia.org/zh-hans/%E5%BA%B7%E5%A8%81%E7%94%9F%E5%91%BD%E6%B8%B8%E6%88%8F)
 
-### 前端使用到的技术/python package
+### 后端使用到的技术/python package
 * [web.py](http://webpy.org/)
 * [unittest](https://docs.python.org/3/library/unittest.html)
 
